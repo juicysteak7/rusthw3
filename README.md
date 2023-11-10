@@ -95,7 +95,30 @@ Your program will be a simple terminal interface for playing Chomp against your 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Ask the user to input a move and perform it.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Try to find a winning move. If there is one, perform it. Otherwise, stall by chomping as little as possible. (You can implement this by chomping the furthest-right piece in the lowermost nonempty row.)
+&nbsp;&nbsp;&nbsp;&nbsp;Try to find a winning move. If there is one, perform it. 
+
+&nbsp;&nbsp;&nbsp;&nbsp;Otherwise, stall by chomping as little as possible. (You can implement this by chomping the furthest-right piece in the lowermost nonempty row.)
 
 If the user ever gives invalid input, simply ask again until they give valid input.
 
+# Projest Notes
+
+This assignment was similar to one in Bart's A.I. class so understanding the ask wasn't difficult.
+
+The game Chomp was new to me, so learning the rules was where I started.
+
+I elected to use a Hashset of tuples to represent the board, it seemed like an elegant solution and proved to be easy to work with.
+
+I will likely try to use this approach of board representation again.
+
+The wining_move function, and the game loop took the longest to nail down.
+
+You can easily do testing on the library functions but testing user input functions is more challenging.
+
+It tooks some repitition to get the exact logic right and catch some edge cases.
+
+What if the human player chooses to eat the poisened square? - Something I missed initially
+
+The biggest takeaway was the hashset representation of a 2d board. 
+
+I had done arrays or vectors in the past which work well enough to represent the board but can easily become nested loop hell.
