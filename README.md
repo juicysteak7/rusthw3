@@ -8,7 +8,7 @@ CS410 - Rust Programming
 
 # Background
 
-Chomp is a very simple game played with a chocolate bar. This [Wikipedia article] (https://en.wikipedia.org/wiki/Chomp)
+Chomp is a very simple game played with a chocolate bar. This [Wikipedia article](https://en.wikipedia.org/wiki/Chomp)
 
 Links to an external site. describes the rules of the game.
 
@@ -24,25 +24,25 @@ The game state should be represented by a struct Board you define. The most impo
 
 One way: use an array
 
-    Use a fixed-size five-by-four (five columns, four rows) array of bools to represent the game state. The element at index i, j should be false if the square at i, j has been eaten, and true otherwise.
+        Use a fixed-size five-by-four (five columns, four rows) array of bools to represent the game state. The element at index i, j should be false if the square at i, j has been eaten, and true otherwise.
 
-    Your program should support multiple board sizes. Since the size of a Rust array is fixed at compile time, your board type needs to have fields representing its logical width and height.
+        Your program should support multiple board sizes. Since the size of a Rust array is fixed at compile time, your board type needs to have fields representing its logical width and height.
 
 Another way: use a set
 
-    You can make a HashSet of tuples, where tuple (i, j) being in the set means that position is not yet eaten. You can remove elements from the set as they are eaten.
+You can make a HashSet of tuples, where tuple (i, j) being in the set means that position is not yet eaten. You can remove elements from the set as they are eaten.
 
 Your Board type should support the following operations via impl:
 
-    Create a board with a given width and height.
+Create a board with a given width and height.
 
-    Print a graphical representation of a board.
+Print a graphical representation of a board.
 
-    Chomp a given square, removing all squares below it and to the right of it.
+Chomp a given square, removing all squares below it and to the right of it.
 
-    Return a winning move for the board, if any (see the next section).
+Return a winning move for the board, if any (see the next section).
 
-    Clone a board (the Clone trait).
+Clone a board (the Clone trait).
 
 # The A.I.
 
@@ -50,7 +50,7 @@ The AI
 
 The negamax algorithm solves any zero-sum perfect-information two-player game (like Chomp). It takes as input a board state and outputs a winning move, if one exists.
 
-    `winning-move(posn):
+    winning-move(posn):
         for each remaining row r
             for each remaining column c in r
                 if r = 0 and c = 0
@@ -60,27 +60,27 @@ The negamax algorithm solves any zero-sum perfect-information two-player game (l
                 m ← winning-move(p)
                 if no winning move is returned
                     return the move r, c
-       return no winning move`
+       return no winning move
 
 Understand this pseudocode as follows:
 
-    Check whether the board state is already lost. If so, then there is no winning move.
+Check whether the board state is already lost. If so, then there is no winning move.
 
-    Otherwise, for each possible move m:
+Otherwise, for each possible move m:
 
-    Create a new board p.
+Create a new board p.
 
-    Perform the move m on p.
+Perform the move m on p.
 
-    Call winning_move recursively at p. (Since one player has just made a move, we are now trying to find a winning move for the other player.)
+Call winning_move recursively at p. (Since one player has just made a move, we are now trying to find a winning move for the other player.)
 
-    If winning_move outputs a winning move for p, then m is not a winning move for the current player. (Why?) Continue on to the next move.
+If winning_move outputs a winning move for p, then m is not a winning move for the current player. (Why?) Continue on to the next move.
 
-    Otherwise, m is a winning move. Return it.
+Otherwise, m is a winning move. Return it.
 
 For Chomp:
 
-    The board state is lost if the upper-left square is the only one left.
+The board state is lost if the upper-left square is the only one left.
 
-    You can represent the move “chomp at position i, j” by a tuple (i, j). There is one such possible move for each uneaten square (other than the top left one).
+You can represent the move “chomp at position i, j” by a tuple (i, j). There is one such possible move for each uneaten square (other than the top left one).
 
