@@ -24,25 +24,25 @@ The game state should be represented by a struct Board you define. The most impo
 
 One way: use an array
 
-        Use a fixed-size five-by-four (five columns, four rows) array of bools to represent the game state. The element at index i, j should be false if the square at i, j has been eaten, and true otherwise.
+&nbsp;&nbsp;&nbsp;&nbsp;Use a fixed-size five-by-four (five columns, four rows) array of bools to represent the game state. The element at index i, j should be false if the square at i, j has been eaten, and true otherwise.
 
-        Your program should support multiple board sizes. Since the size of a Rust array is fixed at compile time, your board type needs to have fields representing its logical width and height.
+&nbsp;&nbsp;&nbsp;&nbsp;Your program should support multiple board sizes. Since the size of a Rust array is fixed at compile time, your board type needs to have fields representing its logical width and height.
 
 Another way: use a set
 
-You can make a HashSet of tuples, where tuple (i, j) being in the set means that position is not yet eaten. You can remove elements from the set as they are eaten.
+&nbsp;&nbsp;&nbsp;&nbsp;You can make a HashSet of tuples, where tuple (i, j) being in the set means that position is not yet eaten. You can remove elements from the set as they are eaten.
 
 Your Board type should support the following operations via impl:
 
-Create a board with a given width and height.
+&nbsp;&nbsp;&nbsp;&nbsp;Create a board with a given width and height.
 
-Print a graphical representation of a board.
+&nbsp;&nbsp;&nbsp;&nbsp;Print a graphical representation of a board.
 
-Chomp a given square, removing all squares below it and to the right of it.
+&nbsp;&nbsp;&nbsp;&nbsp;Chomp a given square, removing all squares below it and to the right of it.
 
-Return a winning move for the board, if any (see the next section).
+&nbsp;&nbsp;&nbsp;&nbsp;Return a winning move for the board, if any (see the next section).
 
-Clone a board (the Clone trait).
+&nbsp;&nbsp;&nbsp;&nbsp;Clone a board (the Clone trait).
 
 # The A.I.
 
@@ -64,23 +64,38 @@ The negamax algorithm solves any zero-sum perfect-information two-player game (l
 
 Understand this pseudocode as follows:
 
-Check whether the board state is already lost. If so, then there is no winning move.
+&nbsp;&nbsp;&nbsp;&nbsp;Check whether the board state is already lost. If so, then there is no winning move.
 
-Otherwise, for each possible move m:
+&nbsp;&nbsp;&nbsp;&nbsp;Otherwise, for each possible move m:
 
-Create a new board p.
+&nbsp;&nbsp;&nbsp;&nbsp;Create a new board p.
 
-Perform the move m on p.
+&nbsp;&nbsp;&nbsp;&nbsp;Perform the move m on p.
 
-Call winning_move recursively at p. (Since one player has just made a move, we are now trying to find a winning move for the other player.)
+&nbsp;&nbsp;&nbsp;&nbsp;Call winning_move recursively at p. (Since one player has just made a move, we are now trying to find a winning move for the other player.)
 
-If winning_move outputs a winning move for p, then m is not a winning move for the current player. (Why?) Continue on to the next move.
+&nbsp;&nbsp;&nbsp;&nbsp;If winning_move outputs a winning move for p, then m is not a winning move for the current player. (Why?) Continue on to the next move.
 
-Otherwise, m is a winning move. Return it.
+&nbsp;&nbsp;&nbsp;&nbsp;Otherwise, m is a winning move. Return it.
 
 For Chomp:
 
-The board state is lost if the upper-left square is the only one left.
+&nbsp;&nbsp;&nbsp;&nbsp;The board state is lost if the upper-left square is the only one left.
 
-You can represent the move “chomp at position i, j” by a tuple (i, j). There is one such possible move for each uneaten square (other than the top left one).
+&nbsp;&nbsp;&nbsp;&nbsp;You can represent the move “chomp at position i, j” by a tuple (i, j). There is one such possible move for each uneaten square (other than the top left one).
+
+# The Program
+Your program will be a simple terminal interface for playing Chomp against your AI. It should perform the following sequence:
+
+&nbsp;&nbsp;&nbsp;&nbsp;Ask the user for a board size.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Repeatedly:
+
+&nbsp;&nbsp;&nbsp;&nbsp;Print the board.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Ask the user to input a move and perform it.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Try to find a winning move. If there is one, perform it. Otherwise, stall by chomping as little as possible. (You can implement this by chomping the furthest-right piece in the lowermost nonempty row.)
+
+If the user ever gives invalid input, simply ask again until they give valid input.
 
