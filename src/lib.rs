@@ -8,6 +8,22 @@ pub struct Board {
 }
 
 impl Board {
+    /// Creates a new `Board` with the specified `width` and `height`.
+    ///
+    /// The `Board` is initialized with uneaten squares represented as a `HashSet<(usize, usize)>`.
+    ///
+    /// # Arguments
+    ///
+    /// * `width` - The width of the board.
+    /// * `height` - The height of the board.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use chomp::Board;
+    ///
+    /// let board = Board::new(3, 3);
+    /// ```
     pub fn new(width: usize, height: usize) -> Self {
         let mut uneaten_squares: HashSet<(usize, usize)> = HashSet::new();
         for i in 0..width {
@@ -22,6 +38,19 @@ impl Board {
         }
     }
 
+    /// Prints a graphical representation of the current state of the board.
+    ///
+    /// The uneaten squares are represented by 'O' and eaten squares by 'X'.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use chomp::Board;
+    ///
+    /// let mut board = Board::new(3, 3);
+    /// board.chomp(1, 1);
+    /// board.print();
+    /// ```
     pub fn print(&self) {
         for i in 0..self.width {
             for j in 0..self.height {
@@ -35,6 +64,23 @@ impl Board {
         }
     }
 
+    /// Chomps the chocolate bar starting from the specified position (row, col).
+    ///
+    /// This operation removes all uneaten squares below and to the right of the specified position.
+    ///
+    /// # Arguments
+    ///
+    /// * `row` - The row index of the starting position.
+    /// * `col` - The column index of the starting position.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use chomp::Board;
+    ///
+    /// let mut board = Board::new(3, 3);
+    /// board.chomp(1, 1);
+    /// ```
     pub fn chomp(&mut self, row: usize, col: usize) {
         for i in row..self.width {
             for j in col..self.height {
@@ -43,6 +89,31 @@ impl Board {
         }
     }
 
+    /// Finds a winning move on the current board, if one exists.
+    ///
+    /// The `winning_move` function iterates through the remaining uneaten squares
+    /// and recursively explores possible moves to identify a winning move.
+    ///
+    /// A winning move is one that leads to the opponent having the last remaining square,
+    /// which is the upper-left square (0, 0).
+    ///
+    /// # Returns
+    ///
+    /// Returns `Some((usize, usize))` if a winning move is found, or `None` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use chomp::Board;
+    ///
+    /// let mut board = Board::new(3, 3);
+    /// board.chomp(1, 1);
+    /// if let Some(winning_move) = board.winning_move() {
+    ///     println!("Winning move: {:?}", winning_move);
+    /// } else {
+    ///     println!("No winning move found.");
+    /// }
+    /// ```
     pub fn winning_move(&self) -> Option<(usize, usize)> {
         // Check if the upper-left square is the only one left.
         if self.uneaten_squares.len() == 1 && self.uneaten_squares.contains(&(0, 0)) {

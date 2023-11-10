@@ -2,15 +2,49 @@ use chomp::Board;
 use std::io;
 
 fn main() {
+    //Print welcome message
     println!("--------------------");
     println!();
     println!("CHOMP A.I.");
     println!();
     println!("--------------------");
 
-    let mut board_setup = false;
+    // Construct board
+    let mut board: Board = board_setup();
+
+    // Print initial board state
+    println!("--------------------");
+    board.print();
+    println!("--------------------");
+
+    // Start game loop
+    play_game(&mut board);
+}
+
+/// Sets up and returns a new `Board` based on user input for the board size.
+///
+/// The function prompts the user to enter their desired board size (e.g., "3 5").
+/// It validates the input, ensuring it consists of two space-separated numbers,
+/// and creates a new `Board` with the specified width and height.
+///
+/// If the input is invalid, the function continues prompting the user until valid input is provided.
+///
+/// # Returns
+///
+/// Returns a new `Board` instance based on the user's input.
+///
+/// # Examples
+///
+/// ```
+/// use chomp::Board;
+///
+/// let board = board_setup();
+/// println!("Initialized board with size: {} x {}", board.width, board.height);
+/// ```
+fn board_setup() -> Board {
+    let mut board_flag = false;
     let mut board: Board = Board::new(0, 0);
-    while !board_setup {
+    while !board_flag {
         // Create a mutable string to store the user's input
         let mut input = String::new();
 
@@ -48,15 +82,34 @@ fn main() {
             }
         };
 
-        board = Board::new(num0, num1);
-        board_setup = true;
+        board = Board::new(num0,num1);
+        board_flag = true;
     }
+    board
+}
 
-    println!("--------------------");
-    board.print();
-    println!("--------------------");
-
-    let mut previous_player: i32 = -1;
+/// Plays the Chomp game on the provided board, alternating between the human player and the AI.
+///
+/// The function prompts the human player for moves, validates the input, and updates the board accordingly.
+/// After each human move, the AI determines its best move using the `winning_move` function or, if necessary,
+/// chomps the furthest-right piece in the lowermost nonempty row to stall.
+///
+/// The game continues until there is only one uneaten square left, and the function announces the winner.
+///
+/// # Arguments
+///
+/// * `board` - A mutable reference to the Chomp game board.
+///
+/// # Examples
+///
+/// ```
+/// use chomp::Board;
+///
+/// let mut board = Board::new(3, 3);
+/// play_game(&mut board);
+/// ```
+fn play_game(board:&mut Board) {
+    let mut previous_player: i32 = -1; // Track last player to tell who won. 1 is human player, -1 is A.I.
 
     while board.uneaten_squares.len() > 1 {
         // Create a mutable string to store the user's input
@@ -101,15 +154,29 @@ fn main() {
             continue;
         }
 
+        // Check if it is a valid move
         if board.uneaten_squares.contains(&(num0, num1)) {
+            // Player has eaten poisoned square. They lose.
+            if num0 == 0 && num1 == 0 {
+                board.chomp(num0, num1);
+
+                println!("Your move:");
+                board.print();
+                println!("--------------------");
+
+                continue;
+            }
+
             // Chomp players move
             board.chomp(num0, num1);
 
+            println!("Your move:");
             board.print();
             println!("--------------------");
 
             previous_player *= -1;
 
+            // If one block left, it is the poison square, continue on to victory
             if board.uneaten_squares.len() <= 1 {
                 continue;
             }
